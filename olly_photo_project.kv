@@ -1,0 +1,63 @@
+#:import Factory kivy.factory.Factory
+
+# All button properties
+<Button>
+    font_size:20
+    size_hint: (None, None)
+    width: 150
+    height: 45
+
+<MyLayout>
+
+    imagePath:imagePath
+
+    BoxLayout:
+        orientation: "vertical"
+        size: root.width, root.height
+        padding:50
+        spacing:20
+
+        Button:
+            text: "Zoom"
+            pos_hint: {'center_x':.5}
+
+        Image: 
+            id: image
+            # Default image but can load new one
+            source: 'elephant_balloon.jpg'
+            #allow_stretch: True
+            #keep_ratio: False
+        
+        # Row widget within main widget
+        BoxLayout: 
+            orientation: "horizontal"
+            size_hint: (None, None)
+            width: 500
+            height: 50
+            spacing: 70
+            
+            
+            Button: 
+                text: "Exit"
+                on_press: root.exitPress()
+
+            Label:
+                size_hint: (None, None)
+                width: 30
+                height: 45
+                text: "Enter image path:"
+                color: (0,0,0,1)
+            
+            TextInput:
+                size_hint: (None, None)
+                width: 150
+                height: 45
+                id: imagePath
+                multiline: False
+
+            Button: 
+                text: "Load Image"
+                # pos_hint: {'center_x':.5}
+                # need something here for opening load window
+                on_release: root.loadImage()
+            
