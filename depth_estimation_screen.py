@@ -1,4 +1,5 @@
-# depth_estimation_screen.py
+# Programmed by "Huzefa Ali Asgar"
+
 from kivy.uix.screenmanager import Screen
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
