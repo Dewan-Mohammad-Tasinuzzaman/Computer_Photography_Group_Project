@@ -1,3 +1,5 @@
+# Part Dewan Programmed. Overall setup for the application's UI.
+
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager
 
