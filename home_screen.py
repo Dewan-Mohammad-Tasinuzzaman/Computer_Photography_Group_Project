@@ -13,11 +13,16 @@ class HomeScreen(Screen):
 
         heading = Label(text="Computer Photography - Group Project - Fall 2023", font_size=24)
         zoom_button = Button(text="Image Zooming", on_press=self.go_to_zoom_screen)
+        panorama_button = Button(text="Panorama Image Maker", on_press=self.go_to_panorama_screen)  # Add this line
 
         layout.add_widget(heading)
         layout.add_widget(zoom_button)
+        layout.add_widget(panorama_button)  # Add this line
 
         self.add_widget(layout)
 
     def go_to_zoom_screen(self, instance):
         self.manager.current = 'zoom'
+
+    def go_to_panorama_screen(self, instance):  # Add this function
+        self.manager.current = 'panorama'
