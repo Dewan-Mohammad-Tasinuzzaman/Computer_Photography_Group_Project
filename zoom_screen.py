@@ -37,35 +37,28 @@ class ZoomScreen(Screen):
         np_image = cv2.cvtColor(np_image, cv2.COLOR_BGR2RGB)
         h, w, c = np_image.shape
         print(c)
+        # a quarter of the image will have half the rows and half the columns
         mid_height = h//2
         mid_width = w//2
 
-        # a quarter of the image will have half the rows and half the columns
+        # Ones arrays for dividing up image into 4 quarters
         top_left = np.ones((mid_height,mid_width,c))
         top_right = np.ones((mid_height,mid_width,c))
         bottom_left = np.ones((mid_height,mid_width,c))
         bottom_right = np.ones((mid_height,mid_width,c))
-        print(top_left)
 
         # taking all rows and all columns in correct range
         # top left quadrant of image is from start at 0 to middle of image regarding height
         # from 0 to middle of image regarding width
-        
-        
-        # top_left[:,:,:] = np_image[0:mid_height, 0:mid_width, c]
-        # top_right[:,:,:] = np_image[0:mid_height, (mid_height+1):w, c]
-        # bottom_left[:,:,:] = np_image[((mid_height)+1):h, 0:mid_width, c]
-        # # bottom right is from pixel after mid point regarding height till the end of the image
-        # # from pixel after midpoint regarding width till end of image
-        # bottom_right[:,:,:] = np_image[((mid_height)+1):h, mid_width:w, c]
-        # print(top_left)
-        # print(top_right)
-        # print(bottom_left)
-        # print(bottom_right)
+        top_left[:,:,:] = np_image[0:mid_height, 0:mid_width, :]
+        top_right[:,:,:] = np_image[0:mid_height, mid_width:w, :]
+        bottom_left[:,:,:] = np_image[mid_height:h, 0:mid_width, :]
+        # bottom right is from pixel after mid point regarding height till the end of the image
+        # from pixel after midpoint regarding width till end of image
+        bottom_right[:,:,:] = np_image[mid_height:h, mid_width:w, :]
 
-        # divide image up into 4 quarters, then fill up arrays with those 4 quarters
-
-        # wanna divide image up into 4 seperate ones attached together, and turn those each into buttons
+        # have attached images, wanna make image buttons, clicking on one then uses image buttons
+        # corresponding image array and resizes it with nn
         
         # color: color=(1,0,0,1) - this red
         load_label = Label(text='Enter an image path:')
