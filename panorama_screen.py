@@ -1,4 +1,4 @@
-# Part Dewan Programmed. Panorama creation.
+# Part programmed by Dewan. Panorama creation.
 
 from kivy.uix.screenmanager import Screen
 from kivy.uix.boxlayout import BoxLayout
