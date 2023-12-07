@@ -12,6 +12,7 @@ from PIL import Image as PILImage
 from kivy.uix.label import Label
 import cv2
 import numpy as np
+#from kivy.uix.button import ImageButton
 
 #Builder.load_file('zoom_screen.kv')
 
@@ -24,19 +25,24 @@ class ZoomScreen(Screen):
         layout = BoxLayout(orientation='vertical', spacing=10, padding=10)
 
         # add placeholder image widget that can then be replaced with loaded image
-        self.default_image = Image(source='elephant_balloon.jpg', size_hint=(None, None), height=400, width=700, pos_hint={'center_x': 0.5, 'center_y': 0.5})
-        layout.add_widget(self.default_image)
+        # self.default_image = Image(source='elephant_balloon.jpg', size_hint=(None, None), height=400, width=700, pos_hint={'center_x': 0.5, 'center_y': 0.5})
+        # layout.add_widget(self.default_image)
 
         # Will this work when image path gets updated?
 
         # read in image as np array with cv2 library
         # use arrays then display them as images
         # manipulate first then convert
+
+        # add to row then add row to layout
+        row = BoxLayout(orientation='horizontal', spacing=10, padding=10)
+        row2 = BoxLayout(orientation='horizontal', spacing=10, padding=10)
+
+        # later wanna move this out of init?
         default = 'elephant_balloon.jpg'
         np_image = cv2.imread(default)
         np_image = cv2.cvtColor(np_image, cv2.COLOR_BGR2RGB)
         h, w, c = np_image.shape
-        print(c)
         # a quarter of the image will have half the rows and half the columns
         mid_height = h//2
         mid_width = w//2
@@ -56,9 +62,39 @@ class ZoomScreen(Screen):
         # bottom right is from pixel after mid point regarding height till the end of the image
         # from pixel after midpoint regarding width till end of image
         bottom_right[:,:,:] = np_image[mid_height:h, mid_width:w, :]
+        #top_left = cv2.cvtColor(top_left, cv2.COLOR_BGR2RGB)
+
+        cv2.imwrite('top_left.png', top_left)
+        cv2.imwrite('top_right.png', top_right)
+        cv2.imwrite('bottom_left.png', bottom_left)
+        cv2.imwrite('bottom_right.png', bottom_right)
+        image_button_top_left = Button(background_normal='top_left.png', size_hint=(None, None), height=200, width=350)
+        image_button_top_right = Button(background_normal='top_right.png', size_hint=(None, None), height=200, width=350)
+        image_button_bottom_left = Button(background_normal='bottom_left.png', size_hint=(None, None), height=200, width=350)
+        image_button_bottom_right = Button(background_normal='bottom_right.png', size_hint=(None, None), height=200, width=350)
+        row.add_widget(image_button_top_left)
+        row.add_widget(image_button_top_right)
+        layout.add_widget(row)
+
+        row2.add_widget(image_button_bottom_left)
+        row2.add_widget(image_button_bottom_right)
+        layout.add_widget(row2)
+
+        # Create ImageButtons using the saved image files
+        #image_button_top_left = ImageButton(source='top_left.png', size_hint=(None, None), size=(mid_height, mid_width))
+        # image_button_top_right = ImageButton(source='top_right.png', size_hint=(None, None), size=(mid_height, mid_width))
+        # image_button_bottom_left = ImageButton(source='bottom_left.png', size_hint=(None, None), size=(mid_height, mid_width))
+        # image_button_bottom_right = ImageButton(source='bottom_right.png', size_hint=(None, None), size=(mid_height, mid_width))
 
         # have attached images, wanna make image buttons, clicking on one then uses image buttons
         # corresponding image array and resizes it with nn
+        # image_button = ImageButton(
+        #     source='image_path.png',
+        #     size_hint=(None, None),
+        #     # will this work?
+        #     size=(mid_height, mid_width),  # Set the size of the button
+        #     #on_press=self.on_button_press  # Set the function to call when the button is pressed
+        # )
         
         # color: color=(1,0,0,1) - this red
         load_label = Label(text='Enter an image path:')
