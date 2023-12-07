@@ -35,8 +35,10 @@ class ZoomScreen(Screen):
         # manipulate first then convert
 
         # add to row then add row to layout
-        row = BoxLayout(orientation='horizontal', spacing=10, padding=10)
-        row2 = BoxLayout(orientation='horizontal', spacing=10, padding=10)
+        row = BoxLayout(orientation='horizontal', spacing=10, padding=10, pos_hint={'center_x': 0.5, 'center_y': 0.5})
+        layout.add_widget(row)
+        row2 = BoxLayout(orientation='horizontal', spacing=10, padding=10, pos_hint={'center_x': 0.5, 'center_y': 0.5})
+        layout.add_widget(row2)
 
         # later wanna move this out of init?
         default = 'elephant_balloon.jpg'
@@ -74,11 +76,11 @@ class ZoomScreen(Screen):
         image_button_bottom_right = Button(background_normal='bottom_right.png', size_hint=(None, None), height=200, width=350)
         row.add_widget(image_button_top_left)
         row.add_widget(image_button_top_right)
-        layout.add_widget(row)
+        # layout.add_widget(row)
 
         row2.add_widget(image_button_bottom_left)
         row2.add_widget(image_button_bottom_right)
-        layout.add_widget(row2)
+        # layout.add_widget(row2)
 
         # Create ImageButtons using the saved image files
         #image_button_top_left = ImageButton(source='top_left.png', size_hint=(None, None), size=(mid_height, mid_width))
