@@ -47,6 +47,16 @@ class ZoomScreen(Screen):
         self.default_image = 'elephant_balloon.jpg'
         self.get_image_buttons(layout)
         
+        # Create image buttons
+        image_button_top_left = Button(background_normal='top_left.png')
+        layout.add_widget(image_button_top_left)
+        image_button_top_right = Button(background_normal='top_right.png')
+        layout.add_widget(image_button_top_right)
+        image_button_bottom_left = Button(background_normal='bottom_left.png')
+        layout.add_widget(image_button_bottom_left)
+        image_button_bottom_right = Button(background_normal='bottom_right.png')
+        layout.add_widget(image_button_bottom_right)
+        
         # color: color=(1,0,0,1) - this red
         load_label = Label(text='Enter an image path:')
         layout.add_widget(load_label)
@@ -105,14 +115,7 @@ class ZoomScreen(Screen):
     #     cv2.imwrite('top_right.png', top_right)
     #     cv2.imwrite('bottom_left.png', bottom_left)
     #     cv2.imwrite('bottom_right.png', bottom_right)
-    #     image_button_top_left = Button(background_normal='top_left.png')
-    #     layout.add_widget(image_button_top_left)
-    #     image_button_top_right = Button(background_normal='top_right.png')
-    #     layout.add_widget(image_button_top_right)
-    #     image_button_bottom_left = Button(background_normal='bottom_left.png')
-    #     layout.add_widget(image_button_bottom_left)
-    #     image_button_bottom_right = Button(background_normal='bottom_right.png')
-    #     layout.add_widget(image_button_bottom_right)
+
 
     # have image loaded in, need to place click areas over image based on array of pixels?
     def load_images(self, instance, layout):
