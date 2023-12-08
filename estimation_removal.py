@@ -4,16 +4,16 @@ import cv2
 import numpy as np
 from PIL import Image
 
-# Example Depth Estimation Function using OpenCV (Placeholder)
+# Placeholder for Depth Estimation Function using a pre-trained model
 def estimate_depth(image_path, model):
     # Load image
     image = Image.open(image_path)
     image = image.resize((384, 384))
     image = np.array(image)
 
-    # Mock depth estimation (replace with your actual method)
-    # This is a placeholder. You might need to use a different model or method here
-    depth = np.zeros_like(image)
+
+    # need to use a different model or method here
+    depth = np.random.rand(*image.shape)  # Random depth for demonstration
 
     return depth
 
@@ -28,8 +28,8 @@ def main():
     image_path = 'path_to_your_image.jpg'
     mask_path = 'path_to_your_mask.jpg'
 
-    # Load your depth estimation model here (if available)
-    model = None  # Replace with your model
+    # Load our depth estimation model here (if available)
+    model = None  # Replace with our model
 
     # Estimate Depth
     depth = estimate_depth(image_path, model)
@@ -42,4 +42,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
