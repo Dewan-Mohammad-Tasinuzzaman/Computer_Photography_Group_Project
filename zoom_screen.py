@@ -25,11 +25,13 @@ class ZoomScreen(Screen):
     def __init__(self, **kwargs):
         super(ZoomScreen, self).__init__(**kwargs)
 
-        #layout = BoxLayout(orientation='vertical', spacing=10, padding=10)
+        layout = BoxLayout(orientation='vertical', spacing=10, padding=5)
+        self.default_image = Image(source='elephant_balloon.jpg', size_hint=(None, None), height = 200, width = 700, pos_hint={'center_x': 0.5, 'center_y': 0.5})
+        layout.add_widget(self.default_image)
         #layout = FloatLayout()
         # Wanna add image widget beside this as placeholder
-        layout = GridLayout(cols=3, padding=20, spacing=3, cols_minimum={0: 100, 1: 100, 2:100, 3:100}, rows_minimum={0: 150, 1: 150, 3: 150})
-
+        layout2 = GridLayout(cols=2, rows=3, padding=20, spacing=1, cols_minimum={0: 150, 1: 150}, rows_minimum={0: 100, 1: 100})
+        #layout.add_widget(layout2)
         # read in image as np array with cv2 library
         # use arrays then display them as images
         # manipulate first then convert
@@ -45,19 +47,31 @@ class ZoomScreen(Screen):
         self.top_left_image = 'top_left.png'
         
         # Create image buttons
+        # wanna implement zooming - create nn function so that each of these buttons pressed upscales image
         self.image_button_top_left = Button(background_normal='top_left.png')
         self.image_button_top_right = Button(background_normal='top_right.png')
         self.image_button_bottom_left = Button(background_normal='bottom_left.png')
         self.image_button_bottom_right = Button(background_normal='bottom_right.png')
 
         # add placeholder image widget that can then be replaced with loaded image
-        self.default_image = Image(source='elephant_balloon.jpg', size_hint=(None, None), height=400, width=700, pos_hint={'center_x': 0.5, 'center_y': 0.5})
+        # pos_hint={'center_x': 0.5, 'center_y': 0.5}
+        # size_hint=(None, None), height=300, width=600
+        #self.default_image = Image(source='elephant_balloon.jpg', size_hint=(None, None), height = 400, width = 700)
         
-        layout.add_widget(self.image_button_top_left)
-        layout.add_widget(self.image_button_top_right)
-        layout.add_widget(self.default_image)
-        layout.add_widget(self.image_button_bottom_left)
-        layout.add_widget(self.image_button_bottom_right)
+        # layout.add_widget(self.image_button_top_left)
+        # layout.add_widget(self.image_button_top_right)
+        # #layout.add_widget(self.default_image)
+        # layout.add_widget(self.image_button_bottom_left)
+        # layout.add_widget(self.image_button_bottom_right)
+        layout2.add_widget(self.image_button_top_left)
+        layout2.add_widget(self.image_button_top_right)
+        layout2.add_widget(self.image_button_bottom_left)
+        layout2.add_widget(self.image_button_bottom_right)
+        layout.add_widget(layout2)
+        # layout.add_widget(self.image_button_top_right)
+        # #layout.add_widget(self.default_image)
+        # layout.add_widget(self.image_button_bottom_left)
+        # layout.add_widget(self.image_button_bottom_right)
         
         # color: color=(1,0,0,1) - this red
         load_label = Label(text='Enter an image path:')
