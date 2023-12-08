@@ -31,21 +31,13 @@ def create_image_buttons(self, layout):
     # bottom right is from pixel after mid point regarding height till the end of the image
     # from pixel after midpoint regarding width till end of image
     bottom_right[:,:,:] = np_image[mid_height:h, mid_width:w, :].astype(np.uint8)
-    #top_left = cv2.cvtColor(top_left, cv2.COLOR_BGR2RGB)
 
     top_left = cv2.cvtColor(top_left, cv2.COLOR_BGR2RGB)
     top_right = cv2.cvtColor(top_right, cv2.COLOR_BGR2RGB)
     bottom_left = cv2.cvtColor(bottom_left, cv2.COLOR_BGR2RGB)
     bottom_right = cv2.cvtColor(bottom_right, cv2.COLOR_BGR2RGB)
+
     cv2.imwrite('top_left.png', top_left)
     cv2.imwrite('top_right.png', top_right)
     cv2.imwrite('bottom_left.png', bottom_left)
     cv2.imwrite('bottom_right.png', bottom_right)
-    image_button_top_left = Button(background_normal='top_left.png')
-    layout.add_widget(image_button_top_left)
-    image_button_top_right = Button(background_normal='top_right.png')
-    layout.add_widget(image_button_top_right)
-    image_button_bottom_left = Button(background_normal='bottom_left.png')
-    layout.add_widget(image_button_bottom_left)
-    image_button_bottom_right = Button(background_normal='bottom_right.png')
-    layout.add_widget(image_button_bottom_right)
