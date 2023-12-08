@@ -16,21 +16,15 @@ def create_image_buttons(self, layout):
     mid_height = h//2
     mid_width = w//2
 
-    # Ones arrays for dividing up image into 4 quarters
-    top_left = np.ones((mid_height,mid_width,c)).astype(np.uint8)
-    top_right = np.ones((mid_height,mid_width,c)).astype(np.uint8)
-    bottom_left = np.ones((mid_height,mid_width,c)).astype(np.uint8)
-    bottom_right = np.ones((mid_height,mid_width,c)).astype(np.uint8)
-
     # taking all rows and all columns in correct range
     # top left quadrant of image is from start at 0 to middle of image regarding height
     # from 0 to middle of image regarding width
-    top_left[:,:,:] = np_image[0:mid_height, 0:mid_width, :].astype(np.uint8)
-    top_right[:,:,:] = np_image[0:mid_height, mid_width:w, :].astype(np.uint8)
-    bottom_left[:,:,:] = np_image[mid_height:h, 0:mid_width, :].astype(np.uint8)
+    top_left = np_image[0:mid_height, 0:mid_width, :].astype(np.uint8)
+    top_right = np_image[0:mid_height, mid_width:w, :].astype(np.uint8)
+    bottom_left = np_image[mid_height:h, 0:mid_width, :].astype(np.uint8)
     # bottom right is from pixel after mid point regarding height till the end of the image
     # from pixel after midpoint regarding width till end of image
-    bottom_right[:,:,:] = np_image[mid_height:h, mid_width:w, :].astype(np.uint8)
+    bottom_right = np_image[mid_height:h, mid_width:w, :].astype(np.uint8)
 
     top_left = cv2.cvtColor(top_left, cv2.COLOR_BGR2RGB)
     top_right = cv2.cvtColor(top_right, cv2.COLOR_BGR2RGB)
