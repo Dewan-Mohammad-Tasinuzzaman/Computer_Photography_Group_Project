@@ -1,4 +1,4 @@
-# Part Dewan Programmed. For overall setup for the application's UI.
+# Programmed by "Dewan Mohammad Tasinuzzaman". For overall setup for the application's UI.
 
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager
