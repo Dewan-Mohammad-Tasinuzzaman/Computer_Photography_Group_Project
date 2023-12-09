@@ -2,14 +2,14 @@ import numpy as np
 import cv2
 from kivy.uix.button import Button
 
-# Takes self of zoom screen class and a layout, generating image buttons
-# for that layout
+# Olly implemented for zoom
 
-# shape mismatch error when loading in tiger
+# Takes self of zoom screen and layout, divides image into quadrants
+# for creating zoom buttons and zooming, returns quadrants arrays and 
+# original image dimensions
 def create_image_buttons(self, layout):
     # Read in default image as np array
-    np_image = cv2.imread(self.default_image)
-    print(self.default_image)
+    np_image = cv2.imread(self.default_image.source)
     np_image = cv2.cvtColor(np_image, cv2.COLOR_BGR2RGB)
     h, w, c = np_image.shape
     # a quarter of the image will have half the rows and half the columns
@@ -35,3 +35,5 @@ def create_image_buttons(self, layout):
     cv2.imwrite('top_right.png', top_right)
     cv2.imwrite('bottom_left.png', bottom_left)
     cv2.imwrite('bottom_right.png', bottom_right)
+
+    return top_left, top_right, bottom_left, bottom_right, np_image.shape
