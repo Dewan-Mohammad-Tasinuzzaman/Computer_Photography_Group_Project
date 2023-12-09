@@ -1,10 +1,12 @@
-# Part Olly Programmed, implementing across devices and zoom
-# worry about loading in later
-
-# don't use kv file maybe
+# Olly Love 
+# Allows user to zoom into a portion of an image
+# Image buttons and zoomed portion should change in program but they don't
+# even though the png files are changing
 
 from kivy.uix.screenmanager import Screen
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.gridlayout import GridLayout
 from kivy.uix.image import Image
 from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
@@ -12,128 +14,116 @@ from PIL import Image as PILImage
 from kivy.uix.label import Label
 import cv2
 import numpy as np
-#from kivy.uix.button import ImageButton
-
-#Builder.load_file('zoom_screen.kv')
+from load_image_zoom import create_image_buttons
+from functools import partial
 
 class ZoomScreen(Screen):
-    #imagePath = ObjectProperty(None)
-
     def __init__(self, **kwargs):
         super(ZoomScreen, self).__init__(**kwargs)
 
-        layout = BoxLayout(orientation='vertical', spacing=10, padding=10)
+        layout = BoxLayout(orientation='vertical', spacing=2)
+        self.default_image = Image(source='elephant_balloon.jpg', size_hint=(None, None), 
+                                   height = 300, width = 700, pos_hint={'center_x': 0.5, 'center_y': 0.5})
+        layout.add_widget(self.default_image)
 
-        # add placeholder image widget that can then be replaced with loaded image
-        # self.default_image = Image(source='elephant_balloon.jpg', size_hint=(None, None), height=400, width=700, pos_hint={'center_x': 0.5, 'center_y': 0.5})
-        # layout.add_widget(self.default_image)
-
-        # Will this work when image path gets updated?
-
-        # read in image as np array with cv2 library
-        # use arrays then display them as images
-        # manipulate first then convert
-
-        # add to row then add row to layout
-        row = BoxLayout(orientation='horizontal', spacing=10, padding=10, pos_hint={'center_x': 0.5, 'center_y': 0.5})
-        layout.add_widget(row)
-        row2 = BoxLayout(orientation='horizontal', spacing=10, padding=10, pos_hint={'center_x': 0.5, 'center_y': 0.5})
-        layout.add_widget(row2)
-
-        # later wanna move this out of init?
-        default = 'elephant_balloon.jpg'
-        np_image = cv2.imread(default)
-        np_image = cv2.cvtColor(np_image, cv2.COLOR_BGR2RGB)
-        h, w, c = np_image.shape
-        # a quarter of the image will have half the rows and half the columns
-        mid_height = h//2
-        mid_width = w//2
-
-        # Ones arrays for dividing up image into 4 quarters
-        top_left = np.ones((mid_height,mid_width,c))
-        top_right = np.ones((mid_height,mid_width,c))
-        bottom_left = np.ones((mid_height,mid_width,c))
-        bottom_right = np.ones((mid_height,mid_width,c))
-
-        # taking all rows and all columns in correct range
-        # top left quadrant of image is from start at 0 to middle of image regarding height
-        # from 0 to middle of image regarding width
-        top_left[:,:,:] = np_image[0:mid_height, 0:mid_width, :]
-        top_right[:,:,:] = np_image[0:mid_height, mid_width:w, :]
-        bottom_left[:,:,:] = np_image[mid_height:h, 0:mid_width, :]
-        # bottom right is from pixel after mid point regarding height till the end of the image
-        # from pixel after midpoint regarding width till end of image
-        bottom_right[:,:,:] = np_image[mid_height:h, mid_width:w, :]
-        #top_left = cv2.cvtColor(top_left, cv2.COLOR_BGR2RGB)
-
-        cv2.imwrite('top_left.png', top_left)
-        cv2.imwrite('top_right.png', top_right)
-        cv2.imwrite('bottom_left.png', bottom_left)
-        cv2.imwrite('bottom_right.png', bottom_right)
-        image_button_top_left = Button(background_normal='top_left.png', size_hint=(None, None), height=200, width=350)
-        image_button_top_right = Button(background_normal='top_right.png', size_hint=(None, None), height=200, width=350)
-        image_button_bottom_left = Button(background_normal='bottom_left.png', size_hint=(None, None), height=200, width=350)
-        image_button_bottom_right = Button(background_normal='bottom_right.png', size_hint=(None, None), height=200, width=350)
-        row.add_widget(image_button_top_left)
-        row.add_widget(image_button_top_right)
-        # layout.add_widget(row)
-
-        row2.add_widget(image_button_bottom_left)
-        row2.add_widget(image_button_bottom_right)
-        # layout.add_widget(row2)
-
-        # Create ImageButtons using the saved image files
-        #image_button_top_left = ImageButton(source='top_left.png', size_hint=(None, None), size=(mid_height, mid_width))
-        # image_button_top_right = ImageButton(source='top_right.png', size_hint=(None, None), size=(mid_height, mid_width))
-        # image_button_bottom_left = ImageButton(source='bottom_left.png', size_hint=(None, None), size=(mid_height, mid_width))
-        # image_button_bottom_right = ImageButton(source='bottom_right.png', size_hint=(None, None), size=(mid_height, mid_width))
-
-        # have attached images, wanna make image buttons, clicking on one then uses image buttons
-        # corresponding image array and resizes it with nn
-        # image_button = ImageButton(
-        #     source='image_path.png',
-        #     size_hint=(None, None),
-        #     # will this work?
-        #     size=(mid_height, mid_width),  # Set the size of the button
-        #     #on_press=self.on_button_press  # Set the function to call when the button is pressed
-        # )
-        
-        # color: color=(1,0,0,1) - this red
-        load_label = Label(text='Enter an image path:')
+        load_label = Label(text='Choose a quadrant below to Zoom in', size_hint=(None, None), height = 20, width = 400)
         layout.add_widget(load_label)
 
-        # should i be using self. ...
-        self.load_textfield = TextInput(multiline=False, size_hint=(None, None), height=30, width = 200)
+        layout2 = GridLayout(cols=2, rows=3, padding=10, spacing=1, cols_minimum={0: 90, 1: 90}, 
+                             rows_minimum={0: 100, 1: 100})
+
+        top_left, top_right, bottom_left, bottom_right, new_dimensions = self.get_image_buttons(layout)
+        
+        # These made up of image quadrants, pressing this allows a portion of an image to be zoomed into
+        self.image_button_top_left = Button(background_normal='top_left.png', 
+                                            on_press=partial(self.nearest_neighbor_zoom, 
+                                                             small_image = top_left, 
+                                                             new_dimensions=new_dimensions))
+        self.image_button_top_right = Button(background_normal='top_right.png', 
+                                             on_press=partial(self.nearest_neighbor_zoom, 
+                                                              small_image = top_right, 
+                                                              new_dimensions=new_dimensions))
+        self.image_button_bottom_left = Button(background_normal='bottom_left.png', 
+                                               on_press=partial(self.nearest_neighbor_zoom, 
+                                                                small_image = bottom_left, 
+                                                                new_dimensions=new_dimensions))
+        self.image_button_bottom_right = Button(background_normal='bottom_right.png', 
+                                                on_press=partial(self.nearest_neighbor_zoom, 
+                                                                 small_image = bottom_right, 
+                                                                 new_dimensions=new_dimensions))
+        
+        # Add buttons to grid
+        layout2.add_widget(self.image_button_top_left)
+        layout2.add_widget(self.image_button_top_right)
+        layout2.add_widget(self.image_button_bottom_left)
+        layout2.add_widget(self.image_button_bottom_right)
+        layout.add_widget(layout2)
+
+        # Enter image path, load image, back to main widgets
+        self.load_textfield = TextInput(multiline=False, size_hint=(None, None), height = 30, width = 300, 
+                                        pos_hint={'center_x': 0.5, 'center_y': 0.5})
         layout.add_widget(self.load_textfield)
 
-        # # "Load Images" button
-        load_button = Button(text='Load Images', on_press=self.load_images)
+        load_button = Button(text='Load Images', on_press=partial(self.load_images, layout=layout), 
+                             size_hint=(None, None), height = 30, width = 300, pos_hint={'center_x': 0.5, 'center_y': 0.5})
         layout.add_widget(load_button)
         
-        # # "Back" button
-        back_button = Button(text='Back to Main Page', on_press=self.go_back_to_main_page)
+        back_button = Button(text='Back to Main Page', on_press=self.go_back_to_main_page, 
+                             size_hint=(None, None), height = 30, width = 300, pos_hint={'center_x': 0.5, 'center_y': 0.5})
         layout.add_widget(back_button)
 
-        # #layout = Builder.load_file('zoom_screen.kv') # zoom_screen.kv created by Olly
         self.add_widget(layout)
 
-    # have image loaded in, need to place click areas over image based on array of pixels?
-    def load_images(self, instance):
+    # Load image buttons with code from load_image_zoom.py
+    def get_image_buttons(self, layout):
+        return create_image_buttons(self, layout)
+    
+    # Loads image and should refresh buttons
+    def load_images(self, instance, layout):
         image_path = self.load_textfield.text
         self.default_image.source = image_path
         print(image_path)
-        # change this so not using kv file
+        self.get_image_buttons(layout)
 
-        # when press load want to read inputted path and load that path
-        # image = Image(source='elephant_balloon.jpg')
-        # image_layout.add_widget(image)
-        print("loaded")
+    # Takes image portion and new dimensions of the original image size
+    # through interpolation make portion that image size
+    def nearest_neighbor_zoom(self, instance, small_image, new_dimensions):
+        old_h, old_w, _ = small_image.shape
+        new_h, new_w, _ = new_dimensions
+        zoomed_in = np.ones((new_h,new_w,3))
+        # step size between rows and columns, can be decimal
+        row_step = (old_h - 1) / (new_h - 1)
+        col_step = (old_w - 1) / (new_w - 1)
+        # increments to track rows and columns
+        r_incr = 0
+        c_incr = 0
+        # indices for new array
+        i = 0
+        j = 0
 
-        # imagePath = self.ids.imagePath.text
-        # #imagePath = self.imagePath.text
-        # self.ids.image.source = imagePath
-        # #self.ids.imagePath.text = ""
-        # self.imagePath.text = ""
+        # While within height of the new image, iterate over indices in image to be resized, rounding to
+        # nearest pixel, increment steps based on nn logic
+        # increment row and repeat when on last column
+        while i < new_h: 
+            zoomed_in[i,j,:] = small_image[self.correct_round(r_incr), self.correct_round(c_incr), :]
+            c_incr = c_incr + col_step
+            j+=1
+            if (j == new_w):
+                r_incr = r_incr + row_step
+                i+=1
+                j=0
+                c_incr = 0
+
+        cv2.imwrite('zoomed.png', zoomed_in)
+        self.default_image.source = 'zoomed.png'
+    
+    # Accounting for pythons rounding down to 0 when something is 0.5
+    # values with .5 should round up
+    def correct_round(self, value):
+        if value % 1 == 0.5:
+            return int(value + 0.5)
+        else:
+            return int(round(value))
 
     def go_back_to_main_page(self, instance):
         self.manager.current = 'home'

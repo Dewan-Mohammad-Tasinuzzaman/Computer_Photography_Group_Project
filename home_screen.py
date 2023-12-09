@@ -1,4 +1,4 @@
-# Part Dewan Programmed. Navigating to all other pages of the application.
+# Programmed by "Dewan Mohammad Tasinuzzaman". Navigating to all other pages of the application.
 
 # home_screen.py
 from kivy.uix.screenmanager import Screen
