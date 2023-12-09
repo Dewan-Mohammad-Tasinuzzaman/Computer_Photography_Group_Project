@@ -7,7 +7,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.image import Image
 from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
-from PIL import Image as PILImage  # Importing Image module from PIL
+from PIL import Image as PILImage
 
 class PanoramaScreen(Screen):
 

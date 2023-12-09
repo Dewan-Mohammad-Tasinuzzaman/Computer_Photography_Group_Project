@@ -1,12 +1,16 @@
 # Programmed by "Huzefa Ali Asgar"
 
 from pydoc import TextRepr
-from tkinter import Button, Label
+from kivy.uix.button import Button
+from kivy.uix.label import Label
+from kivy.uix.boxlayout import BoxLayout
 import cv2
 import numpy as np
 from kivy.uix.image import Image
 from kivy.core.window import Window
 from kivy.uix.popup import Popup
+from kivy.uix.screenmanager import Screen
+from kivy.uix.filechooser import FileChooserListView
 
 class ObjectRemovalScreen(Screen):
     def __init__(self, **kwargs):
@@ -15,7 +19,7 @@ class ObjectRemovalScreen(Screen):
         layout = BoxLayout(orientation='vertical', spacing=10, padding=10)
 
         heading = Label(text="Object Removal Page", font_size=24)
-        back_button = Button(text="Back to Home", on_press=self.go_back_to_home)
+        back_button = Button(text='Back to Main Page', on_press=self.go_back_to_main_page)
         self.filechooser = FileChooserListView(on_selection=self.selected)
         process_button = Button(text="Process Image", on_press=self.process_image)
 
@@ -25,6 +29,11 @@ class ObjectRemovalScreen(Screen):
         layout.add_widget(back_button)
 
         self.add_widget(layout)
+
+    def selected(self, selection):
+        # Handle the file selection here
+        if selection:
+            self.selected_image = selection[0]
 
     def detect_objects(self, image):
         (h, w) = image.shape[:2]
@@ -98,5 +107,9 @@ class ObjectRemovalScreen(Screen):
         popup = Popup(title="Inpainted Image", content=image_widget,
                       size_hint=(None, None), size=(Window.width, Window.height))
         popup.open()
+    
+
+    def go_back_to_main_page(self, instance):
+        self.manager.current = 'home'
 
 
