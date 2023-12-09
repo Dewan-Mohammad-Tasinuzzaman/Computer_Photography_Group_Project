@@ -18,6 +18,9 @@ class MyApp(App):
         sm.add_widget(DepthEstimationScreen(name='depth_estimation'))
         sm.add_widget(ObjectRemovalScreen(name='object_removal'))
         return sm
+    
+    def on_start(self):
+        self.title = 'Quick Editor'
 
 if __name__ == '__main__':
     MyApp().run()
