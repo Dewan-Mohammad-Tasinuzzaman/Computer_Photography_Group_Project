@@ -11,9 +11,8 @@ def estimate_depth(image_path, model):
     image = image.resize((384, 384))
     image = np.array(image)
 
-
-    # need to use a different model or method here
-    depth = np.random.rand(*image.shape)  # Random depth for demonstration
+    # Simulate a depth map with random values for demonstration purposes
+    depth = np.random.rand(image.shape[0], image.shape[1])  # Random depth for demonstration
 
     return depth
 
@@ -25,22 +24,37 @@ def remove_object(image_path, mask):
 
 # Main Workflow
 def main():
-    image_path = 'path_to_your_image.jpg'
-    mask_path = 'path_to_your_mask.jpg'
+    # The path to the image to be processed
+    image_path = '/Users/huz/Desktop/Computer_Photography_Group_Project/elephant_balloon.jpg'
 
-    # Load our depth estimation model here (if available)
-    model = None  # Replace with our model
+    # Placeholder for a model
+    model = None 
 
     # Estimate Depth
     depth = estimate_depth(image_path, model)
-    # Process and save depth data as needed...
+    
+    # Convert depth data to an 8-bit image for visualization (normalize and scale)
+    depth_normalized = (depth / np.max(depth) * 255).astype(np.uint8)
+    depth_colormap = cv2.applyColorMap(depth_normalized, cv2.COLORMAP_JET)  # Apply a color map for better visualization
 
-    # Load and process mask for object removal
-    mask = cv2.imread(mask_path, 0)
+    # Save the depth data as an image for visualization
+    depth_image_path = image_path.replace('.jpg', '_depth.jpg')
+    cv2.imwrite(depth_image_path, depth_colormap)
+
+    # For object removal, we need a mask. Here we should have a function to create a mask.
+    # Since we don't have an actual mask, let's create a dummy mask .
+    mask = np.zeros(depth_normalized.shape, dtype=np.uint8)
+    cv2.circle(mask, (mask.shape[1]//2, mask.shape[0]//2), 100, 255, -1)  # A simple circular mask
+
+    # Remove object using the mask
     result_image = remove_object(image_path, mask)
-    cv2.imwrite('result.jpg', result_image)
+
+    # Save the result of object removal
+    result_image_path = image_path.replace('.jpg', '_removed.jpg')
+    cv2.imwrite(result_image_path, result_image)
+
+    print(f"Depth map saved to {depth_image_path}")
+    print(f"Object removed image saved to {result_image_path}")
 
 if __name__ == "__main__":
     main()
-
-

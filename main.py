@@ -1,13 +1,15 @@
 # Part Dewan Programmed. For overall setup for the application's UI.
 
-from kivy.app import App
-from kivy.uix.screenmanager import ScreenManager
+
 
 from home_screen import HomeScreen
 from zoom_screen import ZoomScreen
 from panorama_screen import PanoramaScreen
 from depth_estimation_screen import DepthEstimationScreen
 from object_removal_screen import ObjectRemovalScreen
+from kivy.app import App
+from kivy.uix.screenmanager import ScreenManager, Screen
+
 
 class MyApp(App):
     def build(self):
